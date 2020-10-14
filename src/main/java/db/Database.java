@@ -1,20 +1,31 @@
 package db;
 
+import controller.OptionsController;
+
 import javax.swing.*;
+import java.io.File;
 import java.sql.*;
 
 public class Database {
+    private static Database instance;
+
     public Connection con;
     public Statement stm;
-    public String url;
+    public String url = "jdbc:ucanaccess://home/jpdavila/StudioProjects/ProjetoRAIAR/src/main/java/db/Raiar.accdb";
+
+    public static Database getInstance(){
+        if (instance == null){
+            instance = new Database();
+        }
+        return instance;
+    }
 
     public void connect(){
         try
+
         {
             /* Tenta se conectar ao Driver */
 //            Class.forName("ojdbc10.jar");
-
-            url = "jdbc:ucanaccess://C:\\Users\\jpdav\\IdeaProjects\\projetoraiar\\src\\main\\java\\db\\Raiar2.accdb";
 
             /* nomedobanco é o nome que você deu anteriormente ao seu alias */
             con = DriverManager.getConnection(url);
@@ -39,6 +50,49 @@ public class Database {
             System.exit(0);
         }
     }
+
+
+
+    public int performInsert(String columns, String values, String table) throws SQLException {
+        String sqlInsert = "INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ")";
+        Connection conn = DriverManager.getConnection(url);
+        PreparedStatement pst = conn.prepareStatement(sqlInsert);
+        int toReturn = 0;
+        try {
+            toReturn = pst.executeUpdate();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            pst.close();
+            conn.close();
+            return toReturn;
+        }
+        pst.close();
+        conn.close();
+        return toReturn;
+    }
+
+
+    public int performInsertAll(String values, String table) throws SQLException {
+        String sqlInsert = "INSERT INTO " + table + " VALUES (" + values + ")";
+        Connection conn = DriverManager.getConnection(url);
+        PreparedStatement pst = conn.prepareStatement(sqlInsert);
+        int toReturn = 0;
+        try {
+            toReturn = pst.executeUpdate();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            pst.close();
+            conn.close();
+            return toReturn;
+        }
+        pst.close();
+        conn.close();
+        return toReturn;
+    }
+
+
 
     public void query(){
         try
