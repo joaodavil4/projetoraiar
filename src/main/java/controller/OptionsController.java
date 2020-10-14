@@ -20,13 +20,15 @@ public class OptionsController {
         Scanner in = new Scanner(System.in);
         System.out.println("Digite o seu login...");
         String login = in.next();
+        System.out.println("Digite a sua senha...");
+        String password = in.next();
         System.out.println("Digite o seu nome...");
         String name = in.next();
         System.out.println("Digite a sua função...");
         String role = in.next();
         System.out.println("Digite o seu setor...");
         String sector = in.next();
-        Consultant consultant = new Consultant(1,login, name, role,sector);
+        Consultant consultant = new Consultant(login, password, name, role,sector);
 
         try {
             Database.getInstance()
@@ -35,5 +37,13 @@ public class OptionsController {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public void login(){
+        Scanner in = new Scanner(System.in);
+        System.out.println("Digite o seu login...");
+        String login = in.next();
+        System.out.println("Digite a sua senha...");
+        String name = in.next();
     }
 }

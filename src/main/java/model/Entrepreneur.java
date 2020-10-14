@@ -4,8 +4,8 @@ public class Entrepreneur extends User{
     private int phone;
     private String email;
 
-    public Entrepreneur(int id, String login, String name, String role, int phone, String email) {
-        super(id, login, name, role);
+    public Entrepreneur(String login, String password, String name, String role, int phone, String email) {
+        super(login, password, name, role);
         this.phone = phone;
         this.email = email;
     }

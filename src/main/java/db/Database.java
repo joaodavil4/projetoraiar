@@ -11,7 +11,7 @@ public class Database {
 
     public Connection con;
     public Statement stm;
-    public String url = "jdbc:ucanaccess://home/jpdavila/StudioProjects/ProjetoRAIAR/src/main/java/db/Raiar.accdb";
+    public String url = "jdbc:ucanaccess://src/main/java/db/Raiar8.accdb";
 
     public static Database getInstance(){
         if (instance == null){
@@ -26,12 +26,13 @@ public class Database {
         {
             /* Tenta se conectar ao Driver */
 //            Class.forName("ojdbc10.jar");
+//            Class.forName("org.hsqldb.jdbcDriver");
 
             /* nomedobanco é o nome que você deu anteriormente ao seu alias */
             con = DriverManager.getConnection(url);
             stm = con.createStatement();
 //            JOptionPane.showMessageDialog(null, "ok");
-            query();
+//            query();
         }
         catch (SQLException e)
         {
@@ -51,44 +52,57 @@ public class Database {
         }
     }
 
+    public int performSelect(String table) throws SQLException {
+        String sql = "SELECT * FROM " + table;
 
-
-    public int performInsert(String columns, String values, String table) throws SQLException {
-        String sqlInsert = "INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ")";
-        Connection conn = DriverManager.getConnection(url);
-        PreparedStatement pst = conn.prepareStatement(sqlInsert);
-        int toReturn = 0;
+        ResultSet toReturn;
         try {
-            toReturn = pst.executeUpdate();
+            toReturn = stm.executeQuery(sql);
         }
         catch(Exception e){
             e.printStackTrace();
-            pst.close();
-            conn.close();
+            stm.close();
+            con.close();
+        }
+        stm.close();
+        con.close();
+        return 0;
+
+    }
+
+    public int performInsert(String columns, String values, String table) throws SQLException {
+        String sqlInsert = "INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ")";
+
+        int toReturn = 0;
+        try {
+            toReturn = stm.executeUpdate(sqlInsert);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            stm.close();
+            con.close();
             return toReturn;
         }
-        pst.close();
-        conn.close();
+        stm.close();
+        con.close();
         return toReturn;
     }
 
 
-    public int performInsertAll(String values, String table) throws SQLException {
+    public int performInsertAll(String table, String values) throws SQLException {
         String sqlInsert = "INSERT INTO " + table + " VALUES (" + values + ")";
-        Connection conn = DriverManager.getConnection(url);
-        PreparedStatement pst = conn.prepareStatement(sqlInsert);
         int toReturn = 0;
         try {
-            toReturn = pst.executeUpdate();
+            toReturn = stm.executeUpdate(sqlInsert);
         }
         catch(Exception e){
             e.printStackTrace();
-            pst.close();
-            conn.close();
+            stm.close();
+            con.close();
             return toReturn;
         }
-        pst.close();
-        conn.close();
+        stm.close();
+        con.close();
         return toReturn;
     }
 

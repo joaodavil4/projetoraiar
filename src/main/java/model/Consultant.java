@@ -4,8 +4,8 @@ public class Consultant extends User{
     private String sector;
     private String TABLE_NAME = "CONSULTOR";
 
-    public Consultant(int id, String login, String name, String role, String sector) {
-        super(id, login, name, role);
+    public Consultant(String login, String password, String name, String role, String sector) {
+        super(login, password, name, role);
         this.sector = sector;
     }
     
@@ -23,7 +23,7 @@ public class Consultant extends User{
 
     @Override
     public String toString() {
-        return getLogin() + "," + getName() + "," + getRole()
-                + "," + getSector();
+        return getId() + "," + getLogin() + "," + getPassword() + ","+ getName() + "," + getSector()
+                + "," + getRole();
     }
 }

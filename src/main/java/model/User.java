@@ -1,14 +1,19 @@
 package model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class User {
+    private static final AtomicInteger ID_GENERATOR = new AtomicInteger(0);
     private int id;
     private String login;
     private String name;
     private String role;
+    private String password;
 
-    public User(int id, String login, String name, String role) {
-        this.id = id;
+    public User(String login, String name, String role, String password) {
+        this.id = ID_GENERATOR.getAndIncrement();
         this.login = login;
+        this.password = password;
         this.name = name;
         this.role = role;
     }
@@ -27,6 +32,14 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
