@@ -23,7 +23,7 @@ public class Consultant extends User{
 
     @Override
     public String toString() {
-        return getId() + "," + getLogin() + "," + getPassword() + ","+ getName() + "," + getSector()
-                + "," + getRole();
+        return "'" + getId() + "','" + getLogin() + "','" + getPassword() + "','"+ getName() + "','" + getSector()
+                + "','" + getRole() + "'";
     }
 }

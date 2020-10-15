@@ -26,7 +26,7 @@ public class Database {
         {
             /* Tenta se conectar ao Driver */
 //            Class.forName("ojdbc10.jar");
-//            Class.forName("org.hsqldb.jdbcDriver");
+            Class.forName("org.hsqldb.jdbcDriver");
 
             /* nomedobanco é o nome que você deu anteriormente ao seu alias */
             con = DriverManager.getConnection(url);
@@ -38,6 +38,8 @@ public class Database {
         {
             JOptionPane.showMessageDialog(null, "Problema ao conectar!");
             System.exit(0);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

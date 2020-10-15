@@ -16,7 +16,7 @@ public class Main{
             exibeMenu();
             Database.getInstance().connect();
             opt = in.nextLine();
-//            Database.getInstance().performSelect("CONSULTOR");
+            Database.getInstance().performSelect("CONSULTOR");
 
             switch (opt){
                 case "1":
