@@ -20,6 +20,8 @@ public class Main{
             switch (opt){
                 case "1":
                     OptionsController.getInstance().newConsultant();
+                case "2":
+                    OptionsController.getInstance().newEntrepreneur();
 
             }
         } while (!opt.equals("0"));
@@ -31,7 +33,8 @@ public class Main{
     public static void exibeMenu(){
         System.out.println("---------------------------------------");
         System.out.println("Opções disponíveis");
-        System.out.println("1) Cadastro de consultor");
+        System.out.println("1) Cadastro de Consultor");
+        System.out.println("2) Cadastro de Empreendedor");
         System.out.println("*) Sair");
 
     }

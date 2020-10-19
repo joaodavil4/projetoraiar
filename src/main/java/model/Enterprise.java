@@ -4,13 +4,13 @@ import java.util.Date;
 
 public class Enterprise {
     private String name;
-    private int phone;
+    private String phone;
     private String email;
     private String site;
     private Date lifetime;
     private Date registrationDate;
 
-    public Enterprise(String name, int phone, String email, String site, Date lifetime, Date registrationDate) {
+    public Enterprise(String name, String phone, String email, String site, Date lifetime, Date registrationDate) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -27,11 +27,11 @@ public class Enterprise {
         this.name = name;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
