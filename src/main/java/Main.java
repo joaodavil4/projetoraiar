@@ -6,17 +6,16 @@ import java.util.Scanner;
 
 public class Main{
     public static void main (String[] args) throws SQLException {
-        Database database = new Database();
+        Database.getInstance().connect();
 
         Scanner in = new Scanner(System.in);
         String opt;
 
+        OptionsController.getInstance().login();
 
         do {
             exibeMenu();
-            Database.getInstance().connect();
             opt = in.nextLine();
-            Database.getInstance().performSelect("CONSULTOR");
 
             switch (opt){
                 case "1":

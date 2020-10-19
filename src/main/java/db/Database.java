@@ -11,7 +11,7 @@ public class Database {
 
     public Connection con;
     public Statement stm;
-    public String url = "jdbc:ucanaccess://src/main/java/db/Raiar8.accdb";
+    public String url = "jdbc:ucanaccess://src/main/java/db/Raiar.accdb";
 
     public static Database getInstance(){
         if (instance == null){
@@ -22,17 +22,13 @@ public class Database {
 
     public void connect(){
         try
-
         {
             /* Tenta se conectar ao Driver */
 //            Class.forName("ojdbc10.jar");
             Class.forName("org.hsqldb.jdbcDriver");
 
-            /* nomedobanco é o nome que você deu anteriormente ao seu alias */
             con = DriverManager.getConnection(url);
             stm = con.createStatement();
-//            JOptionPane.showMessageDialog(null, "ok");
-//            query();
         }
         catch (SQLException e)
         {
@@ -66,8 +62,6 @@ public class Database {
             stm.close();
             con.close();
         }
-        stm.close();
-        con.close();
         return 0;
 
     }
@@ -85,8 +79,6 @@ public class Database {
             con.close();
             return toReturn;
         }
-        stm.close();
-        con.close();
         return toReturn;
     }
 
@@ -103,12 +95,23 @@ public class Database {
             con.close();
             return toReturn;
         }
-        stm.close();
-        con.close();
         return toReturn;
     }
 
+    public boolean queryForLogin(String paramLogin, String paramPassword){
+        String sql = "SELECT * FROM CONSULTOR WHERE LOGIN ='" + paramLogin + "'" + " AND SENHA = '" + paramPassword + "'";
+        try
+        {
+            ResultSet rs = stm.executeQuery(sql);
+            if (rs.next()) return true;
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+        }
 
+        return false;
+    }
 
     public void query(){
         try
@@ -121,16 +124,13 @@ public class Database {
                 String senha = rs.getString("SENHA");
                 String nome = rs.getString("NOME");
 
-                JOptionPane.showMessageDialog(null, "Nome: " + rs.getString("nome") + " - Idade: " + rs.getInt("idade"));
+                JOptionPane.showMessageDialog(null, "Nome: " + rs.getString("nome"));
             }
         }
         catch (SQLException e)
         {
             JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
         }
-        finally
-        {
 
-        }
     }
 }

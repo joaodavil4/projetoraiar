@@ -28,7 +28,7 @@ public class OptionsController {
         String role = in.next();
         System.out.println("Digite o seu setor...");
         String sector = in.next();
-        Consultant consultant = new Consultant(login, password, name, role,sector);
+        Consultant consultant = new Consultant(login, password, name, role, sector);
 
         try {
             Database.getInstance()
@@ -44,6 +44,13 @@ public class OptionsController {
         System.out.println("Digite o seu login...");
         String login = in.next();
         System.out.println("Digite a sua senha...");
-        String name = in.next();
+        String password = in.next();
+
+        if (Database.getInstance().queryForLogin(login, password)){
+            System.out.println("Usuário logado com sucesso!");
+        } else {
+            System.out.println("Credencias incorretas, tente novamente.");
+            login();
+        }
     }
 }
