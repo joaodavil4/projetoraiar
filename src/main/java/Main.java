@@ -22,6 +22,8 @@ public class Main{
                     OptionsController.getInstance().newConsultant();
                 case "2":
                     OptionsController.getInstance().newEntrepreneur();
+                case "3":
+                    OptionsController.getInstance().newDiagnosis();
 
             }
         } while (!opt.equals("0"));
@@ -35,6 +37,7 @@ public class Main{
         System.out.println("Opções disponíveis");
         System.out.println("1) Cadastro de Consultor");
         System.out.println("2) Cadastro de Empreendedor");
+        System.out.println("3) Consultar Diagnóstico");
         System.out.println("*) Sair");
 
     }

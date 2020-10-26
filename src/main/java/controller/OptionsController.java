@@ -2,10 +2,12 @@ package controller;
 
 import db.Database;
 import model.Consultant;
+import model.Diagnosis;
 import model.Enterprise;
 import model.Entrepreneur;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OptionsController {
@@ -40,7 +42,39 @@ public class OptionsController {
             throwables.printStackTrace();
         }
     }
-
+    public void newDiagnosis() throws SQLException {
+        ArrayList<String> enterprises = Database.getInstance().SelectEnterprise();
+        System.out.println("-- EMPRESAS --");
+        for(int i = 0; i < enterprises.size(); i++)
+        {
+            System.out.println(enterprises.get(i).split(",")[0] + " - " + enterprises.get(i).split(",")[1]);
+        }
+        System.out.println("-- --  -- --");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Digite o numero da Empresa...");
+        String idEnterprise = in.next();
+        ArrayList<Diagnosis> diagnostico = Database.getInstance().SelectDiagnosis(idEnterprise);
+        String eixo= "";
+        for(int i = 0; i < diagnostico.size(); i++)
+        {
+            if(eixo.isEmpty()){
+                System.out.println("-----Eixo - " + diagnostico.get(i).getEixo() + " -----");
+                System.out.println("SCORE - PERGUNTA");
+                System.out.println("0" + diagnostico.get(i).getScore() + "    - " + diagnostico.get(i).getPergunta());
+                eixo = diagnostico.get(i).getEixo();
+            }
+            else if (eixo.equals(diagnostico.get(i).getEixo())){
+                System.out.println("0" + diagnostico.get(i).getScore() + "    - " + diagnostico.get(i).getPergunta());
+            }
+            else if(!eixo.equals(diagnostico.get(i).getEixo()))
+            {
+                System.out.println("-----Eixo - " + diagnostico.get(i).getEixo() + " -----");
+                System.out.println("SCORE - PERGUNTA");
+                System.out.println("0" + diagnostico.get(i).getScore() + "    - " + diagnostico.get(i).getPergunta());
+                eixo = diagnostico.get(i).getEixo();
+            }
+        }
+    }
     public void newEntrepreneur(){
         Scanner in = new Scanner(System.in);
         System.out.println("Digite o seu login...");
@@ -83,7 +117,7 @@ public class OptionsController {
         }
     }
 
-    public void login(){
+    public void login() throws SQLException {
         Scanner in = new Scanner(System.in);
         System.out.println("Digite o seu login...");
         String login = in.next();

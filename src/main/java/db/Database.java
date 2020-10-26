@@ -1,17 +1,22 @@
 package db;
 
+import com.sun.org.apache.xpath.internal.objects.XString;
 import controller.OptionsController;
+import model.Diagnosis;
+import model.Enterprise;
 
+import javax.print.DocFlavor;
 import javax.swing.*;
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     private static Database instance;
 
     public Connection con;
     public Statement stm;
-    public String url = "jdbc:ucanaccess://src/main/java/db/Raiar.accdb";
+    public String url = "jdbc:ucanaccess://src/main/java/db/Raiar (2).accdb";
 
     public static Database getInstance(){
         if (instance == null){
@@ -108,7 +113,9 @@ public class Database {
         return toReturn;
     }
 
-    public boolean queryForLogin(String paramLogin, String paramPassword){
+    public boolean queryForLogin(String paramLogin, String paramPassword) throws SQLException {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
         String sql = "SELECT * FROM CONSULTOR WHERE LOGIN ='" + paramLogin + "'" + " AND SENHA = '" + paramPassword + "'";
         try {
             ResultSet rs = stm.executeQuery(sql);
@@ -152,11 +159,81 @@ public class Database {
         }
 
     }
+    public ArrayList<String> SelectEnterprise() throws SQLException {
+        ArrayList<String> enterprise = new ArrayList<String>();
+        try
+        {
+            ResultSet rs = stm.executeQuery("SELECT * FROM EMPRESA");
+            while (rs.next())
+            {
+                int id = rs.getInt("ID");
+                //String login = rs.getString("LOGIN");
+                // String senha = rs.getString("SENHA");
+                String nome = rs.getString("NOME");
+                enterprise.add(""+ id + "," + nome);
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+        }
+        return enterprise;
+    }
+    public ArrayList<Diagnosis> SelectDiagnosis(String empresa) throws SQLException {
+        ArrayList<Diagnosis> diagnosticos = new ArrayList<Diagnosis>();
+        try
+        {
+            String query = "SELECT EIXO.NOME ,PERGUNTA.PERGUNTA ,AVALIACAO.SCORE FROM DIAGNOSTICO JOIN AVALIACAO ON DIAGNOSTICO.ID= AVALIACAO.IDDIAGNOSTICO JOIN PERGUNTA ON AVALIACAO.IDPERGUNTA= PERGUNTA.ID JOIN EIXO ON PERGUNTA.IDEIXO= EIXO.ID WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + " AND DIAGNOSTICO.DATACRIACAO = (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + " GROUP BY DATACRIACAO) ORDER BY EIXO.NOME";
+            ResultSet rs = stm.executeQuery(query);
+            while (rs.next())
+            {
+                String pergunta = rs.getString("pergunta");
+                int score = rs.getInt("Score");
+                String eixo = rs.getString("NOME");
+                diagnosticos.add(new Diagnosis(score,eixo,pergunta));
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+        }
+        return diagnosticos;
+    }
+   /* public int performUpdate(String NomeTabela , String[][] CampoWhere, String[][] ValorSet ) throws SQLException {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
+        try
+        {
+            String query = "SELECT * FROM " + NomeTabela + " WHERE ";
+            for(int i = 0; i<CampoWhere.length;i++)
+            {
+                query = query + CampoWhere[i] + " = " + CampoWhere[i][i];
+                if(CampoWhere.length > 1 && i < CampoWhere.length-1)
+                {
+                    query = query + " AND ";
+                }
+            }
+            ResultSet rs = stm.executeQuery(query);
+            if(rs.next()){
+                do{
+                    return "Sucesso," + rs.getInt("ID");
+                }while(rs.next());
+            }else{
+                return "Falha,Empresa Não encontrada por favor digite novamente";
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+            e.printStackTrace();
+            return "Erro,Erro na pesquisa: " + e.getMessage();
+        }
+    }*/
 
     public void query(){
         try
         {
-            ResultSet rs = stm.executeQuery("SELECT * FROM Empreendedor");
+            ResultSet rs = stm.executeQuery("SELECT * FROM EMPRESA");
             JOptionPane.showMessageDialog(null, "Empresa" );
             while (rs.next())
             {
@@ -164,7 +241,7 @@ public class Database {
                 //String login = rs.getString("LOGIN");
                // String senha = rs.getString("SENHA");
                 String nome = rs.getString("NOME");
-                JOptionPane.showMessageDialog(null, "Nome: " + rs.getString("nome"));
+                JOptionPane.showMessageDialog(null, "login: " + rs.getString("id") + " Senha: " + rs.getString("nome"));
 
             }
         }

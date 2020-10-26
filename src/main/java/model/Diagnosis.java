@@ -1,29 +1,41 @@
 package model;
 
+import com.sun.org.apache.xpath.internal.objects.XString;
+
 import java.util.Date;
 
 public class Diagnosis {
-    private double score;
-    private Date creationDate;
+    private int score;
+    private String eixo;
+    private String pergunta;
 
-    public Diagnosis(double score, Date creationDate) {
+    public Diagnosis(int score, String eixo, String pergunta) {
         this.score = score;
-        this.creationDate = creationDate;
+        this.eixo = eixo;
+        this.pergunta = pergunta;
     }
 
-    public double getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(double score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public String getEixo() {
+        return eixo;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setEixo(String eixo) {
+        this.eixo = eixo;
+    }
+
+    public String getPergunta() {
+        return pergunta;
+    }
+
+    public void setPergunta(String pergunta) {
+        this.pergunta = pergunta;
     }
 }
