@@ -11,7 +11,7 @@ public class Main{
         Scanner in = new Scanner(System.in);
         String opt;
 
-//        OptionsController.getInstance().login();
+        OptionsController.getInstance().login();
 
         do {
             exibeMenu();
