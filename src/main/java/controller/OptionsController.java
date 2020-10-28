@@ -75,6 +75,27 @@ public class OptionsController {
             }
         }
     }
+
+    public void getEnterprise() throws SQLException {
+        ArrayList<String> enterprises = Database.getInstance().SelectEnterprise();
+        System.out.println("-- EMPRESAS --");
+        for(int i = 0; i < enterprises.size(); i++)
+        {
+            System.out.println(enterprises.get(i).split(",")[0] + " - " + enterprises.get(i).split(",")[1]);
+        }
+
+        System.out.println("-- --  -- --");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Digite o numero da Empresa...");
+        String idEnterprise = in.next();
+
+        Enterprise actualEnterprise = Database.getInstance().selectEnterprise(idEnterprise);
+        System.out.println("---------------- " + actualEnterprise.getName() + " -------------------");
+        System.out.println(actualEnterprise.toFriendlyString());
+
+    }
+
+
     public void newEntrepreneur(){
         Scanner in = new Scanner(System.in);
         System.out.println("Digite o seu login...");

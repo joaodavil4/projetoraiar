@@ -11,7 +11,7 @@ public class Main{
         Scanner in = new Scanner(System.in);
         String opt;
 
-        OptionsController.getInstance().login();
+//        OptionsController.getInstance().login();
 
         do {
             exibeMenu();
@@ -20,10 +20,19 @@ public class Main{
             switch (opt){
                 case "1":
                     OptionsController.getInstance().newConsultant();
+                    break;
                 case "2":
                     OptionsController.getInstance().newEntrepreneur();
+                    break;
                 case "3":
                     OptionsController.getInstance().newDiagnosis();
+                    break;
+                case "4":
+                    OptionsController.getInstance().getEnterprise();
+                    break;
+                default:
+                    opt = "0";
+                    break;
 
             }
         } while (!opt.equals("0"));
@@ -38,6 +47,7 @@ public class Main{
         System.out.println("1) Cadastro de Consultor");
         System.out.println("2) Cadastro de Empreendedor");
         System.out.println("3) Consultar Diagnóstico");
+        System.out.println("4) Consultar Empresa");
         System.out.println("*) Sair");
 
     }

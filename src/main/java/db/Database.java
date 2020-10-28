@@ -159,6 +159,7 @@ public class Database {
         }
 
     }
+
     public ArrayList<String> SelectEnterprise() throws SQLException {
         ArrayList<String> enterprise = new ArrayList<String>();
         try
@@ -179,6 +180,36 @@ public class Database {
         }
         return enterprise;
     }
+
+    public Enterprise selectEnterprise(String empresa) throws SQLException {
+
+        try
+        {
+            String query = "SELECT * FROM EMPRESA WHERE ID = '" + empresa + "'";
+            ResultSet rs = stm.executeQuery(query);
+
+            if (rs.next()) {
+                String name = rs.getString("Nome");
+                String phone = rs.getString("Telefone");
+                String email = rs.getString("Email");
+                String site = rs.getString("Site");
+                String lifetime = rs.getString("AnoFundacao");
+                String registrationDate = rs.getString("DataCadastro");
+
+                return new Enterprise(name, phone, email, site, null, null);
+            } else{
+                return null;
+            }
+
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+            return null;
+        }
+
+    }
+
     public ArrayList<Diagnosis> SelectDiagnosis(String empresa) throws SQLException {
         ArrayList<Diagnosis> diagnosticos = new ArrayList<Diagnosis>();
         try

@@ -66,4 +66,13 @@ public class Enterprise {
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
+
+    public String toFriendlyString(){
+        return "Nome: " + getName() +
+                "\n Telefone: " + getPhone() +
+                "\n Email: " + getEmail() +
+                "\n Site: " + getSite() +
+                "\n Data Fundação: " + getLifetime() +
+                "\n Data de Cadastro: " + getRegistrationDate();
+    }
 }
