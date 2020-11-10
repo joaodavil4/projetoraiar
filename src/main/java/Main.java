@@ -25,10 +25,16 @@ public class Main{
                     OptionsController.getInstance().newEntrepreneur();
                     break;
                 case "3":
-                    OptionsController.getInstance().newDiagnosis();
+                    OptionsController.getInstance().getDiagnosis();
                     break;
                 case "4":
                     OptionsController.getInstance().getEnterprise();
+                    break;
+                case "5":
+                    OptionsController.getInstance().newDiagnosis();
+                    break;
+                case "6":
+                    OptionsController.getInstance().updateConsultant();
                     break;
                 default:
                     opt = "0";
@@ -48,7 +54,9 @@ public class Main{
         System.out.println("2) Cadastro de Empreendedor");
         System.out.println("3) Consultar Diagnóstico");
         System.out.println("4) Consultar Empresa");
-        System.out.println("*) Sair");
+        System.out.println("5) Cadastro de Diagnóstico");
+        System.out.println("6) Edição Consultor");
+        System.out.println("0) Sair");
 
     }
 

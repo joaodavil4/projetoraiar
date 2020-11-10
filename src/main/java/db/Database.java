@@ -2,8 +2,10 @@ package db;
 
 import com.sun.org.apache.xpath.internal.objects.XString;
 import controller.OptionsController;
+import model.Consultant;
 import model.Diagnosis;
 import model.Enterprise;
+import model.Evaluation;
 
 import javax.print.DocFlavor;
 import javax.swing.*;
@@ -128,6 +130,37 @@ public class Database {
         }
         return false;
     }
+    public Consultant getConsultant(String id) throws SQLException {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
+        String sql = "SELECT * FROM CONSULTOR WHERE ID = " + id;
+        Consultant consultant = null;
+        try {
+            ResultSet rs = stm.executeQuery(sql);
+            if (rs.next()) {
+                consultant = new Consultant(rs.getString("Login"), rs.getString("Senha"),rs.getString("Nome"),rs.getString("Cargo"), rs.getString("Setor"));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+            return consultant;
+        }
+        return consultant;
+    }
+    public int UpdateConsultant(Consultant consultant, String id) throws SQLException {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
+        int Retorno = -1;
+        String sql = "UPDATE CONSULTOR SET LOGIN = '" + consultant.getLogin() + " ', SENHA = '"+ consultant.getPassword()+"' , CARGO = '"+consultant.getRole()+"' , SETOR = '"+ consultant.getSector()+ "' , NOME = '"+ consultant.getName()+"' WHERE ID = " + id;
+        try {
+            Retorno = stm.executeUpdate(sql);
+            stm.close();
+            con.close();
+            return Retorno;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return Retorno;
+        }
+    }
 
     public String SelectWhereEnterprise(String NomeTabela , String[] CampoWhere, String[] ValorWhere ) throws SQLException {
         con = DriverManager.getConnection(url);
@@ -158,6 +191,28 @@ public class Database {
             return "Erro,Erro na pesquisa: " + e.getMessage();
         }
 
+    }
+    public ArrayList<String> SelectConsultant() throws SQLException {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
+        ArrayList<String> consultant = new ArrayList<String>();
+        try
+        {
+            ResultSet rs = stm.executeQuery("SELECT * FROM Consultor");
+            while (rs.next())
+            {
+                int id = rs.getInt("ID");
+                //String login = rs.getString("LOGIN");
+                // String senha = rs.getString("SENHA");
+                String nome = rs.getString("NOME");
+                consultant.add(""+ id + "," + nome);
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+        }
+        return consultant;
     }
 
     public ArrayList<String> SelectEnterprise() throws SQLException {
@@ -210,11 +265,29 @@ public class Database {
 
     }
 
+    public ArrayList<String> SelectPerguntas() throws SQLException {
+        ArrayList<String> perguntas = new ArrayList<String>();
+        try
+        {
+            ResultSet rs = stm.executeQuery("SELECT * FROM PERGUNTA");
+            while (rs.next())
+            {
+                int id = rs.getInt("ID");
+                String pergunta = rs.getString("PERGUNTA");
+                perguntas.add(""+ id + ";" + pergunta);
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+        }
+        return perguntas;
+    }
     public ArrayList<Diagnosis> SelectDiagnosis(String empresa) throws SQLException {
         ArrayList<Diagnosis> diagnosticos = new ArrayList<Diagnosis>();
         try
         {
-            String query = "SELECT EIXO.NOME ,PERGUNTA.PERGUNTA ,AVALIACAO.SCORE FROM DIAGNOSTICO JOIN AVALIACAO ON DIAGNOSTICO.ID= AVALIACAO.IDDIAGNOSTICO JOIN PERGUNTA ON AVALIACAO.IDPERGUNTA= PERGUNTA.ID JOIN EIXO ON PERGUNTA.IDEIXO= EIXO.ID WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + " AND DIAGNOSTICO.DATACRIACAO = (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + " GROUP BY DATACRIACAO) ORDER BY EIXO.NOME";
+            String query = "SELECT EIXO.NOME ,PERGUNTA.PERGUNTA ,AVALIACAO.SCORE FROM DIAGNOSTICO JOIN AVALIACAO ON DIAGNOSTICO.ID= AVALIACAO.IDDIAGNOSTICO JOIN PERGUNTA ON AVALIACAO.IDPERGUNTA= PERGUNTA.ID JOIN EIXO ON PERGUNTA.IDEIXO= EIXO.ID WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + " AND DIAGNOSTICO.DATACRIACAO = (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + ") ORDER BY EIXO.NOME";
             ResultSet rs = stm.executeQuery(query);
             while (rs.next())
             {
@@ -230,49 +303,53 @@ public class Database {
         }
         return diagnosticos;
     }
-   /* public int performUpdate(String NomeTabela , String[][] CampoWhere, String[][] ValorSet ) throws SQLException {
-        con = DriverManager.getConnection(url);
-        stm = con.createStatement();
-        try
-        {
-            String query = "SELECT * FROM " + NomeTabela + " WHERE ";
-            for(int i = 0; i<CampoWhere.length;i++)
-            {
-                query = query + CampoWhere[i] + " = " + CampoWhere[i][i];
-                if(CampoWhere.length > 1 && i < CampoWhere.length-1)
-                {
-                    query = query + " AND ";
-                }
-            }
-            ResultSet rs = stm.executeQuery(query);
-            if(rs.next()){
-                do{
-                    return "Sucesso," + rs.getInt("ID");
-                }while(rs.next());
-            }else{
-                return "Falha,Empresa Não encontrada por favor digite novamente";
-            }
-        }
-        catch (SQLException e)
-        {
-            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
-            e.printStackTrace();
-            return "Erro,Erro na pesquisa: " + e.getMessage();
-        }
-    }*/
+   public int performInsertDiagnostico(ArrayList<Evaluation> avaliacoes , String empresa ) throws SQLException {
+
+       String sqlInsert = "INSERT INTO DIAGNOSTICO (IDEMPRESA , DATACRIACAO ) "+" VALUES ( " + empresa + " , CURRENT_TIMESTAMP  " +")";
+       int toReturn = 0;
+       con = DriverManager.getConnection(url);
+       con.setAutoCommit(false);
+       PreparedStatement ps = con.prepareStatement(sqlInsert, PreparedStatement.RETURN_GENERATED_KEYS);
+       stm = con.createStatement();
+       try
+       {
+           ps.execute();
+           ResultSet rs = ps.getGeneratedKeys();
+           int iddiagnostico = -1;
+           while (rs.next()) {
+                iddiagnostico = rs.getInt(1);
+           }
+
+           for (int i = 0; i<avaliacoes.size(); i++)
+           {
+               sqlInsert = "INSERT INTO  avaliacao (idpergunta,iddiagnostico, score ) "+" VALUES ( " +avaliacoes.get(i).idPergunta+ " , "+ iddiagnostico + " , " + avaliacoes.get(i).score+" )";
+               toReturn = stm.executeUpdate(sqlInsert);
+           }
+        con.commit();
+       }
+       catch(Exception e){
+           e.printStackTrace();
+           stm.close();
+           con.close();
+           return toReturn;
+       }
+
+       return toReturn;
+    }
 
     public void query(){
         try
         {
-            ResultSet rs = stm.executeQuery("SELECT * FROM EMPRESA");
+            ResultSet rs = stm.executeQuery("SELECT * FROM CONSULTOR");
+            //ResultSet rs = stm.executeQuery("SELECT MAX(DATACRIACAO) as data FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = 1");
             JOptionPane.showMessageDialog(null, "Empresa" );
             while (rs.next())
             {
-                int id = rs.getInt("ID");
+                //int id = rs.getInt("ID");
                 //String login = rs.getString("LOGIN");
                // String senha = rs.getString("SENHA");
-                String nome = rs.getString("NOME");
-                JOptionPane.showMessageDialog(null, "login: " + rs.getString("id") + " Senha: " + rs.getString("nome"));
+                //String nome = rs.getString("NOME");
+                JOptionPane.showMessageDialog(null, "NOME: " + rs.getString("NOME") + " SENHA: " + rs.getString("SENHA") +" LOGIN: " + rs.getString("LOGIN"));
 
             }
         }
