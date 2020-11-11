@@ -113,10 +113,10 @@ public class Database {
         return toReturn;
     }
 
-    public boolean queryForLogin(String paramLogin, String paramPassword) throws SQLException {
+    public boolean queryForLogin(String paramLogin, String paramPassword, String tableLogin) throws SQLException {
         con = DriverManager.getConnection(url);
         stm = con.createStatement();
-        String sql = "SELECT * FROM CONSULTOR WHERE LOGIN ='" + paramLogin + "'" + " AND SENHA = '" + paramPassword + "'";
+        String sql = "SELECT * FROM " + tableLogin + " WHERE LOGIN ='" + paramLogin + "'" + " AND SENHA = '" + paramPassword + "'";
         try {
             ResultSet rs = stm.executeQuery(sql);
             if (rs.next()) return true;

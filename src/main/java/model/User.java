@@ -3,7 +3,6 @@ package model;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
-    private static final AtomicInteger ID_GENERATOR = new AtomicInteger(0);
     private int id;
     private String login;
     private String name;
@@ -11,7 +10,6 @@ public class User {
     private String password;
 
     public User(String login, String name, String role, String password) {
-        this.id = ID_GENERATOR.getAndIncrement();
         this.login = login;
         this.password = password;
         this.name = name;

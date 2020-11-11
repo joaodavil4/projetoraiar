@@ -1,10 +1,7 @@
 package controller;
 
 import db.Database;
-import model.Consultant;
-import model.Diagnosis;
-import model.Enterprise;
-import model.Entrepreneur;
+import model.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,6 +9,7 @@ import java.util.Scanner;
 
 public class OptionsController {
     private static OptionsController instance;
+    private User actualUser;
 
     public static OptionsController getInstance(){
         if (instance == null){
@@ -140,16 +138,31 @@ public class OptionsController {
 
     public void login() throws SQLException {
         Scanner in = new Scanner(System.in);
+        String loginOpt = "";
+
+        if (actualUser == null){
+            System.out.println("Escolha... \n1- Consultor \n2- Empreendor");
+            if (in.nextInt() == 1){
+                loginOpt = "Consultor";
+            } else{
+                loginOpt = "Empreendor";
+            }
+        }
+
         System.out.println("Digite o seu login...");
         String login = in.next();
         System.out.println("Digite a sua senha...");
         String password = in.next();
 
-        if (Database.getInstance().queryForLogin(login, password)){
+        if (Database.getInstance().queryForLogin(login, password, loginOpt)){
             System.out.println("Usuário logado com sucesso!");
         } else {
             System.out.println("Credencias incorretas, tente novamente.");
             login();
         }
+    }
+
+    public User getUser(){
+        return actualUser;
     }
 }
