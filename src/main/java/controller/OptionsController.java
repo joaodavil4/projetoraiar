@@ -4,7 +4,10 @@ import db.Database;
 import model.*;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class OptionsController {
@@ -85,6 +88,72 @@ public class OptionsController {
             Database.getInstance().UpdateConsultant(consultantalterado, idConsultants);
         }
     }
+
+    public void updateEntrepreneur() throws SQLException {
+        ArrayList<String> Entrepreneur = Database.getInstance().SelectEntrepreneur();
+        System.out.println("-- Empreendedores --");
+        for(int i = 0; i < Entrepreneur.size(); i++)
+        {
+            System.out.println(Entrepreneur.get(i).split(",")[0] + " - " + Entrepreneur.get(i).split(",")[1]);
+        }
+        System.out.println("-- --  -- --");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Digite o numero do Registro que deseja alterar...");
+        String idEmpreendedor= in.next();
+        Entrepreneur empreendedorOrignal =  Database.getInstance().getEntrepreneur(idEmpreendedor);
+        Entrepreneur empreendedoralterado = new Entrepreneur(empreendedorOrignal.getLogin(), empreendedorOrignal.getPassword(), empreendedorOrignal.getName(),empreendedorOrignal.getRole() ,empreendedorOrignal.getPhone(),empreendedorOrignal.getEmail(),empreendedorOrignal.getEnterprise(), empreendedorOrignal.getSector());
+        empreendedoralterado.setName(empreendedorOrignal.getName());
+        empreendedoralterado.setSector(empreendedorOrignal.getSector());
+        empreendedoralterado.setRole(empreendedorOrignal.getRole());
+        empreendedoralterado.setPhone(empreendedorOrignal.getPhone());
+        empreendedoralterado.setEmail(empreendedorOrignal.getEmail());
+        int opcao = 0;
+        do{
+            System.out.println("-- Dados do Consultor --");
+            System.out.println("[1]Nome: " + empreendedoralterado.getName() + "  [2]Setor: " + empreendedoralterado.getSector() + " [3]Cargo:" + empreendedoralterado.getRole() + " [4]Telefone:" + empreendedoralterado.getPhone()+ " [5]E-mail:" + empreendedoralterado.getEmail());
+            System.out.println("-- -- -- --");
+            System.out.println("Digite o número do campo que deseja alterar ou 0 para sair: " );
+            opcao = Integer.parseInt(in.next());
+            switch (opcao){
+                case 1:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empreendedoralterado.setName(in.nextLine());
+                    Database.getInstance().UpdateEntrepreneur(empreendedoralterado, idEmpreendedor);
+                    break;
+                case 2:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empreendedoralterado.setSector(in.nextLine());
+                    Database.getInstance().UpdateEntrepreneur(empreendedoralterado, idEmpreendedor);
+                    break;
+                case 3:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empreendedoralterado.setRole(in.nextLine());
+                    Database.getInstance().UpdateEntrepreneur(empreendedoralterado, idEmpreendedor);
+                    break;
+                case 4:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empreendedoralterado.setPhone(in.nextLine());
+                    Database.getInstance().UpdateEntrepreneur(empreendedoralterado, idEmpreendedor);
+                    break;
+                case 5:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empreendedoralterado.setEmail(in.nextLine());
+                    Database.getInstance().UpdateEntrepreneur(empreendedoralterado, idEmpreendedor);
+                    break;
+                default:
+                    break;
+            }
+        }while(opcao != 0);
+
+
+
+    }
+
     public void newDiagnosis() throws SQLException {
        ArrayList<String> enterprises = Database.getInstance().SelectEnterprise();
         System.out.println("-- EMPRESAS --");
@@ -163,6 +232,70 @@ public class OptionsController {
 
     }
 
+    public void newEnterprise() throws ParseException {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Digite o seu Nome...");
+
+        String nome = in.nextLine();
+
+        System.out.println("Digite a sua Telefone...");
+        String telefone = in.next();
+        System.out.println("Digite o seu E-mail...");
+        String email = in.next();
+        System.out.println("Digite a sua Site...");
+        String site = in.next();
+        System.out.println("Digite o seu Ano Fundação...");
+        String AnoFundacao = in.next();
+        AnoFundacao = AnoFundacao;
+        String[] splitAnoFund = AnoFundacao.split("/");
+        AnoFundacao = "#"+splitAnoFund[1]+"/"+splitAnoFund[0]+"/"+splitAnoFund[2]+"#";
+        System.out.println("Digite o seu Data Cadastro...");
+        String DataCadastro = in.next();
+        splitAnoFund = DataCadastro.split("/");
+        DataCadastro = "#"+splitAnoFund[1]+"/"+splitAnoFund[0]+"/"+splitAnoFund[2]+"#";
+
+        System.out.println("Digite o seu programa...");
+        String programa = in.next();
+        String buscarPrograma = "";
+        String [] CampoWhere = new  String[1];
+        CampoWhere[0] = "NOME";
+        String [] ValorWhere = new  String[1];
+        ValorWhere[0] = "'"+programa+"'";
+        try{
+            buscarPrograma = Database.getInstance()
+                    .SelectWhereEnterprise("PROGRAMA", CampoWhere, ValorWhere);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        in.nextLine();
+        System.out.println("Digite a sua Advisor...");
+        String advisor = in.nextLine();
+
+        String buscaradvisor = "";
+        String [] CampoAdvisorWhere = new  String[1];
+        CampoWhere[0] = "NOME";
+        String [] ValorWhereAdvisor = new  String[1];
+        ValorWhere[0] = "'"+advisor+"'";
+
+
+        try{
+            buscaradvisor = Database.getInstance()
+                    .SelectWhereEnterprise("Consultor", CampoWhere, ValorWhere);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        if(buscaradvisor.split(",")[0].equals("Sucesso")) {
+            Enterprise enterprise = new Enterprise(nome, telefone, email, site, AnoFundacao, DataCadastro,buscarPrograma.split(",")[1] ,buscaradvisor.split(",")[1]);
+
+            try {
+                Database.getInstance()
+                        .performInsert(enterprise.database_fields(), enterprise.toString(), enterprise.getTABLE_NAME() );
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
 
     public void newEntrepreneur(){
         Scanner in = new Scanner(System.in);

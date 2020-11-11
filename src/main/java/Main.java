@@ -2,10 +2,11 @@ import controller.OptionsController;
 import db.Database;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Scanner;
 
 public class Main{
-    public static void main (String[] args) throws SQLException {
+    public static void main (String[] args) throws SQLException, ParseException {
         Database.getInstance().connect();
 
         Scanner in = new Scanner(System.in);
@@ -25,16 +26,22 @@ public class Main{
                     OptionsController.getInstance().newEntrepreneur();
                     break;
                 case "3":
-                    OptionsController.getInstance().getDiagnosis();
+                    OptionsController.getInstance().newEnterprise();
                     break;
                 case "4":
-                    OptionsController.getInstance().getEnterprise();
+                    OptionsController.getInstance().getDiagnosis();
                     break;
                 case "5":
-                    OptionsController.getInstance().newDiagnosis();
+                    OptionsController.getInstance().getEnterprise();
                     break;
                 case "6":
+                    OptionsController.getInstance().newDiagnosis();
+                    break;
+                case "7":
                     OptionsController.getInstance().updateConsultant();
+                    break;
+                case "8":
+                    OptionsController.getInstance().updateEntrepreneur();
                     break;
                 default:
                     opt = "0";
@@ -52,10 +59,12 @@ public class Main{
         System.out.println("Opções disponíveis");
         System.out.println("1) Cadastro de Consultor");
         System.out.println("2) Cadastro de Empreendedor");
-        System.out.println("3) Consultar Diagnóstico");
-        System.out.println("4) Consultar Empresa");
-        System.out.println("5) Cadastro de Diagnóstico");
-        System.out.println("6) Edição Consultor");
+        System.out.println("3) Cadastro de Empresa");
+        System.out.println("4) Consultar Diagnóstico");
+        System.out.println("5) Consultar Empresa");
+        System.out.println("6) Cadastro de Diagnóstico");
+        System.out.println("7) Edição Consultor");
+        System.out.println("8) Edição Empreendedor");
         System.out.println("0) Sair");
 
     }
