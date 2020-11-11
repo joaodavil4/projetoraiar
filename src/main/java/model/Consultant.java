@@ -5,7 +5,7 @@ public class Consultant extends User{
     private String TABLE_NAME = "CONSULTOR";
 
     public Consultant(String login, String password, String name, String role, String sector) {
-        super(login, password, name, role);
+        super(login, name,role ,password );
         this.sector = sector;
     }
     

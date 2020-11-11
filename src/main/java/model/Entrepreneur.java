@@ -13,6 +13,11 @@ public class  Entrepreneur extends User{
         this.sector = sector;
         this.enterprise = enterprise;
     }
+    public Entrepreneur(String login,String password, String name,String role)
+    {
+        super(login, password, name, role);
+
+    }
 
     public String getPhone() {
         return phone;
@@ -36,6 +41,10 @@ public class  Entrepreneur extends User{
 
     public String getSector() {
         return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
     }
 
     public String getEnterprise() {
