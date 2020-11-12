@@ -90,6 +90,65 @@ public class OptionsController {
         }
     }
 
+    public void updateEnterprise() throws SQLException {
+        ArrayList<String> enterprise = Database.getInstance().SelectEnterprise();
+        System.out.println("-- Empresa --");
+        for(int i = 0; i < enterprise.size(); i++)
+        {
+            System.out.println(enterprise.get(i).split(",")[0] + " - " + enterprise.get(i).split(",")[1]);
+        }
+        System.out.println("-- --  -- --");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Digite o numero do Registro que deseja alterar...");
+        String idEmpresa = in.next();
+        Enterprise empresaOriginal =  Database.getInstance().getEnterprise(idEmpresa);
+        Enterprise empresaAlterado = new Enterprise(empresaOriginal.getName(), empresaOriginal.getPhone(), empresaOriginal.getEmail(),empresaOriginal.getSite() ,empresaOriginal.getLifetime(),empresaOriginal.getRegistrationDate(),empresaOriginal.getIdPrograma(), empresaOriginal.getIdAdvisor());
+        empresaAlterado.setName(empresaOriginal.getName());
+        empresaAlterado.setIdPrograma(empresaOriginal.getIdPrograma());
+        empresaAlterado.setIdAdvisor(empresaOriginal.getIdAdvisor());
+        empresaAlterado.setPhone(empresaOriginal.getPhone());
+        empresaAlterado.setEmail(empresaOriginal.getEmail());
+        empresaAlterado.setSite(empresaOriginal.getSite());
+
+        int opcao = 0;
+        do{
+            System.out.println("-- Dados do Empresa --");
+            System.out.println("[1]Nome: " + empresaAlterado.getName() + "  [2]Telefone: " + empresaAlterado.getPhone() + " [3]E-mail:" + empresaAlterado.getEmail() + " [4]Site:" + empresaAlterado.getSite());
+            System.out.println("-- -- -- --");
+            System.out.println("Digite o número do campo que deseja alterar ou 0 para sair: " );
+            opcao = Integer.parseInt(in.next());
+            switch (opcao){
+                case 1:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empresaAlterado.setName(in.nextLine());
+                    Database.getInstance().UpdateEnterprise(empresaAlterado, idEmpresa);
+                    break;
+                case 2:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empresaAlterado.setPhone(in.nextLine());
+                    Database.getInstance().UpdateEnterprise(empresaAlterado, idEmpresa);
+                    break;
+                case 3:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empresaAlterado.setEmail(in.nextLine());
+                    Database.getInstance().UpdateEnterprise(empresaAlterado, idEmpresa);
+                    break;
+                case 4:
+                    System.out.println("Digite o novo valor:");
+                    in.nextLine();
+                    empresaAlterado.setSite(in.nextLine());
+                    Database.getInstance().UpdateEnterprise(empresaAlterado, idEmpresa);
+                    break;
+
+                default:
+                    break;
+            }
+        }while(opcao != 0);
+
+    }
     public void updateEntrepreneur() throws SQLException {
         ArrayList<String> Entrepreneur = Database.getInstance().SelectEntrepreneur();
         System.out.println("-- Empreendedores --");
@@ -110,7 +169,7 @@ public class OptionsController {
         empreendedoralterado.setEmail(empreendedorOrignal.getEmail());
         int opcao = 0;
         do{
-            System.out.println("-- Dados do Consultor --");
+            System.out.println("-- Dados do Empreendedor --");
             System.out.println("[1]Nome: " + empreendedoralterado.getName() + "  [2]Setor: " + empreendedoralterado.getSector() + " [3]Cargo:" + empreendedoralterado.getRole() + " [4]Telefone:" + empreendedoralterado.getPhone()+ " [5]E-mail:" + empreendedoralterado.getEmail());
             System.out.println("-- -- -- --");
             System.out.println("Digite o número do campo que deseja alterar ou 0 para sair: " );

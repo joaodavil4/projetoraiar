@@ -43,6 +43,9 @@ public class Main{
                 case "8":
                     OptionsController.getInstance().updateEntrepreneur();
                     break;
+                case "9":
+                    OptionsController.getInstance().updateEnterprise();
+                    break;
                 case "10":
                     OptionsController.getInstance().menuAnalise();
                     break;
@@ -68,6 +71,7 @@ public class Main{
         System.out.println("6) Cadastro de Diagnóstico");
         System.out.println("7) Edição Consultor");
         System.out.println("8) Edição Empreendedor");
+        System.out.println("9) Edição Empresa");
         System.out.println("10) Análise Avançada");
         System.out.println("0) Sair");
 

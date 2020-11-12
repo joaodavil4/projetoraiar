@@ -228,6 +228,47 @@ public class Database {
         }
 
     }
+    public int UpdateEnterprise(Enterprise empresa, String id) throws SQLException {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
+        int Retorno = -1;
+        String sql = "UPDATE EMPRESA SET EMAIL = '"+empresa.getEmail()+"' , TELEFONE = '"+empresa.getPhone()+"' , SITE = '"+empresa.getSite()+"' , NOME = '"+ empresa.getName()+ "' WHERE ID = " + id;
+        try {
+            Retorno = stm.executeUpdate(sql);
+            stm.close();
+            con.close();
+            return Retorno;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return Retorno;
+        }
+    }
+
+
+    public Enterprise getEnterprise(String id) throws SQLException {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
+        String sql = "SELECT * FROM EMPRESA WHERE ID = " + id;
+        Enterprise enterprise = null;
+        try {
+            ResultSet rs = stm.executeQuery(sql);
+            if (rs.next()) {
+                enterprise = new Enterprise(rs.getString("Nome"),rs.getString("Telefone"), rs.getString("Email"),rs.getString("Site"),rs.getString("AnoFundacao"), rs.getString("DataCadastro"),rs.getString("IdPrograma"),rs.getString("IdAdvisor"));
+                enterprise.setName(rs.getString("Nome"));
+                enterprise.setEmail(rs.getString("Email"));
+                enterprise.setLifetime(rs.getString("AnoFundacao"));
+                enterprise.setRegistrationDate(rs.getString("DataCadastro"));
+                enterprise.setIdAdvisor(rs.getString("IdAdvisor"));
+                enterprise.setIdPrograma(rs.getString("IdPrograma"));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+            return enterprise;
+        }
+        return enterprise;
+    }
+
+
     public ArrayList<String> SelectConsultant() throws SQLException {
         con = DriverManager.getConnection(url);
         stm = con.createStatement();
