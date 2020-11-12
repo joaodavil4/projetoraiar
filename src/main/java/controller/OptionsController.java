@@ -155,6 +155,41 @@ public class OptionsController {
 
     }
 
+    public void menuAnalise() throws SQLException {
+        ArrayList<String> enterprises = Database.getInstance().SelectEnterprise();
+        System.out.println("* - Análise Geral");
+        System.out.println("-- EMPRESAS --");
+
+        for(int i = 0; i < enterprises.size(); i++)
+        {
+            System.out.println(enterprises.get(i).split(",")[0] + " - " + enterprises.get(i).split(",")[1]);
+        }
+
+        System.out.println("-- --  -- --");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Digite a empresa ou análise...");
+        String idOption = in.nextLine();
+
+        if (idOption.equals("*")){
+            System.out.println("Análise Comparativa do Eixo");
+        } else {
+            System.out.println("1 - Análise Comparativa do Eixo");
+            System.out.println("2 - Análise Histórica do Eixo");
+            System.out.println("3 - Análise Específica do Eixo");
+        }
+
+        String analiseOption = in.nextLine();
+
+        switch (analiseOption){
+            case "1":
+                break;
+            case "2":
+                break;
+            case"3":
+                break;
+        }
+    }
+
     public void newDiagnosis() throws SQLException {
        ArrayList<String> enterprises = Database.getInstance().SelectEnterprise();
         System.out.println("-- EMPRESAS --");
