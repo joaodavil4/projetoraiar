@@ -407,6 +407,26 @@ public class Database {
         }
         return diagnosticos;
     }
+    public ArrayList<Diagnosis> SelectpreviousDiagnosis(String empresa) throws SQLException {
+        ArrayList<Diagnosis> diagnosticos = new ArrayList<Diagnosis>();
+        try
+        {
+            String query = "SELECT EIXO.NOME ,PERGUNTA.PERGUNTA ,AVALIACAO.SCORE FROM DIAGNOSTICO JOIN AVALIACAO ON DIAGNOSTICO.ID= AVALIACAO.IDDIAGNOSTICO JOIN PERGUNTA ON AVALIACAO.IDPERGUNTA= PERGUNTA.ID JOIN EIXO ON PERGUNTA.IDEIXO= EIXO.ID WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + " AND DIAGNOSTICO.DATACRIACAO = (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DATACRIACAO < (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = " + empresa + ") AND DIAGNOSTICO.IDEMPRESA = " + empresa + ") ORDER BY EIXO.NOME";
+            ResultSet rs = stm.executeQuery(query);
+            while (rs.next())
+            {
+                String pergunta = rs.getString("pergunta");
+                int score = rs.getInt("Score");
+                String eixo = rs.getString("NOME");
+                diagnosticos.add(new Diagnosis(score,eixo,pergunta));
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+        }
+        return diagnosticos;
+    }
    public int performInsertDiagnostico(ArrayList<Evaluation> avaliacoes , String empresa ) throws SQLException {
 
        String sqlInsert = "INSERT INTO DIAGNOSTICO (IDEMPRESA , DATACRIACAO ) "+" VALUES ( " + empresa + " , CURRENT_TIMESTAMP  " +")";
@@ -444,8 +464,8 @@ public class Database {
     public void query(){
         try
         {
-            ResultSet rs = stm.executeQuery("SELECT * FROM CONSULTOR");
-            //ResultSet rs = stm.executeQuery("SELECT MAX(DATACRIACAO) as data FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = 1");
+            //ResultSet rs = stm.executeQuery("SELECT * FROM CONSULTOR");
+            ResultSet rs = stm.executeQuery("SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DATACRIACAO <(SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = 1) AND DIAGNOSTICO.IDEMPRESA = 1");
             JOptionPane.showMessageDialog(null, "Empresa" );
             while (rs.next())
             {
@@ -453,8 +473,8 @@ public class Database {
                 //String login = rs.getString("LOGIN");
                // String senha = rs.getString("SENHA");
                 //String nome = rs.getString("NOME");
-                JOptionPane.showMessageDialog(null, "NOME: " + rs.getString("NOME") + " SENHA: " + rs.getString("SENHA") +" LOGIN: " + rs.getString("LOGIN"));
-
+                //JOptionPane.showMessageDialog(null, "NOME: " + rs.getString("NOME") + " SENHA: " + rs.getString("SENHA") +" LOGIN: " + rs.getString("LOGIN"));
+                JOptionPane.showMessageDialog(null, "NOME: " + rs.getString("DATACRIACAO") + " SENHA: " + rs.getString("SENHA") +" LOGIN: " + rs.getString("LOGIN"));
             }
         }
         catch (SQLException e)

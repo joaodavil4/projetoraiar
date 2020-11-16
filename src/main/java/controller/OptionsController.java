@@ -4,11 +4,10 @@ import db.Database;
 import model.*;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class OptionsController {
     private static OptionsController instance;
@@ -243,6 +242,57 @@ public class OptionsController {
             case "1":
                 break;
             case "2":
+                HashMap<String, Integer> eixoScore = new HashMap<String,Integer>();
+                HashMap<String, Integer> previousEixoScore = new HashMap<String,Integer>();
+                ArrayList<Diagnosis> diagnostico = Database.getInstance().SelectDiagnosis(idOption);
+                String eixo= "";
+                for(int i = 0; i < diagnostico.size(); i++)
+                {
+                    if (eixoScore.containsKey(diagnostico.get(i).getEixo())){
+                        eixoScore.put(diagnostico.get(i).getEixo(), eixoScore.get(diagnostico.get(i).getEixo()) + diagnostico.get(i).getScore());
+                    }
+                    else
+                    {
+                        eixoScore.put(diagnostico.get(i).getEixo(),diagnostico.get(i).getScore());
+                    }
+                }
+                ArrayList<Diagnosis> previousdiagnostico = Database.getInstance().SelectpreviousDiagnosis(idOption);
+                for(int i = 0; i < previousdiagnostico.size(); i++)
+                {
+                    if (previousEixoScore.containsKey(previousdiagnostico.get(i).getEixo())){
+                        previousEixoScore.put(previousdiagnostico.get(i).getEixo(), previousEixoScore.get(previousdiagnostico.get(i).getEixo()) + previousdiagnostico.get(i).getScore());
+                    }
+                    else
+                    {
+                        previousEixoScore.put(previousdiagnostico.get(i).getEixo(),previousdiagnostico.get(i).getScore());
+                    }
+                }
+                String nomeEmpresa = "";
+                for(int i = 0; i < enterprises.size(); i++)
+                {
+                    if(enterprises.get(i).split(",")[0].equals(idOption))
+                    {
+                        nomeEmpresa = enterprises.get(1).split(",")[1];
+                    }
+                }
+                System.out.println(" - - Analise Comparativa entre o Diagnóstico Atual e o Diagnóstico Anterior - -");
+                System.out.println();
+                System.out.println("Empresa:" + nomeEmpresa );
+                System.out.println();
+                System.out.println(String.format("%-13s", "Eixo") +"  | Valor Atu. | Valor Ant. | Variação" );
+                DecimalFormat df = new DecimalFormat("00.00");
+                for (String i: eixoScore.keySet()) {
+                    double valoratual = (eixoScore.get(i).doubleValue()/25) * 100 ;
+                    double valorprevio = (previousEixoScore.get(i).doubleValue()/25)*100;
+                    System.out.print( String.format("%-13s", i) + "  | " + String.format("%4.2f",valoratual)+ "%     | " + String.format("%4.2f",valorprevio) +"%     | ");
+                    if (valorprevio> valoratual)
+
+                        System.out.println("\033[0;31m" + "\u02C5" + df.format((valorprevio - valoratual)) + "% "+ "\u001B[0m");
+                    else if(valoratual>valorprevio)
+                        System.out.println("\033[1;32m"  + "\u02C4" + df.format((valoratual - valorprevio)) + "% "+"\u001B[0m");
+                    else
+                        System.out.println("-00.00%" );
+                }
                 break;
             case"3":
                 break;
