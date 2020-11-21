@@ -82,7 +82,6 @@ public class SpiderChart extends ApplicationFrame {
 
     public JPanel createDemoPanel() {
         JFreeChart jfreechart = createChart(createDataset());
-        System.out.println(jfreechart.getPlot().toString());
         return new ChartPanel(jfreechart);
     }
 }
