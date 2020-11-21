@@ -1,5 +1,6 @@
 package controller;
 
+import com.itextpdf.text.Document;
 import db.Database;
 import model.*;
 
@@ -234,6 +235,7 @@ public class OptionsController {
             System.out.println("1 - Análise Comparativa do Eixo");
             System.out.println("2 - Análise Histórica do Eixo");
             System.out.println("3 - Análise Específica do Eixo");
+            System.out.println("4 - Gerar Relatório");
         }
 
         String analiseOption = in.nextLine();
@@ -295,6 +297,12 @@ public class OptionsController {
                 }
                 break;
             case"3":
+                break;
+            case"4":
+                Enterprise actualEnterprise = Database.getInstance().selectEnterprise(idOption);
+                ArrayList<Diagnosis> diagnosticos = Database.getInstance().SelectDiagnosis(idOption);
+                Consultant consultor = Database.getInstance().getConsultant(actualEnterprise.getIdAdvisor());
+                gerarPDF(actualEnterprise, diagnosticos, consultor);
                 break;
         }
     }
@@ -508,6 +516,13 @@ public class OptionsController {
             System.out.println("Credencias incorretas, tente novamente.");
             login();
         }
+    }
+
+    public void gerarPDF(Enterprise enterprise, ArrayList<Diagnosis> diagnosticos, Consultant consultor)
+    {
+
+        Gerar_PDF gerar_pdf = new Gerar_PDF(enterprise, diagnosticos, consultor);
+        gerar_pdf.closeDocument();
     }
 
     public User getUser(){
