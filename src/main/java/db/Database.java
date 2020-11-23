@@ -228,6 +228,54 @@ public class Database {
         }
 
     }
+
+    public ArrayList<Diagnosis> QueryEixoEspecifico(int IDEmpresa,int IDEixo,boolean penultima )  throws SQLException
+    {
+        con = DriverManager.getConnection(url);
+        stm = con.createStatement();
+
+        ArrayList<Diagnosis> diagnosticos = new ArrayList<Diagnosis>();
+
+        try
+        {
+            String query = "";
+            ResultSet rs;
+            if(penultima==false) {
+                 rs = stm.executeQuery("SELECT PERGUNTA.PERGUNTA AS PERGUNTA,AVALIACAO.SCORE AS SCORE FROM  DIAGNOSTICO " +
+                        " INNER JOIN AVALIACAO ON AVALIACAO.IDDIAGNOSTICO = DIAGNOSTICO.ID " +
+                        " INNER JOIN PERGUNTA ON AVALIACAO.IDPERGUNTA = PERGUNTA.ID " +
+                        " WHERE DIAGNOSTICO.IDEMPRESA = " + IDEmpresa + " AND " + " PERGUNTA.IDEIXO = " + IDEixo +
+                        " AND DIAGNOSTICO.DATACRIACAO = (SELECT MAX(DIAGNOSTICO.DATACRIACAO) FROM DIAGNOSTICO WHERE IDEMPRESA = " + IDEmpresa + ")");
+            }
+            else
+            {
+                query = "SELECT PERGUNTA.PERGUNTA AS PERGUNTA,AVALIACAO.SCORE AS SCORE FROM  DIAGNOSTICO " +
+                " INNER JOIN AVALIACAO ON AVALIACAO.IDDIAGNOSTICO = DIAGNOSTICO.ID " +
+                        " INNER JOIN PERGUNTA ON AVALIACAO.IDPERGUNTA = PERGUNTA.ID " +
+                        " WHERE DIAGNOSTICO.IDEMPRESA = " + IDEmpresa + " AND " + " PERGUNTA.IDEIXO = " + IDEixo +
+                        " AND DIAGNOSTICO.DATACRIACAO = (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DATACRIACAO < (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = " + IDEmpresa + ") AND DIAGNOSTICO.IDEMPRESA = " + IDEmpresa+" )";
+
+                rs = stm.executeQuery("SELECT PERGUNTA.PERGUNTA AS PERGUNTA,AVALIACAO.SCORE AS SCORE FROM  DIAGNOSTICO " +
+                        " INNER JOIN AVALIACAO ON AVALIACAO.IDDIAGNOSTICO = DIAGNOSTICO.ID " +
+                        " INNER JOIN PERGUNTA ON AVALIACAO.IDPERGUNTA = PERGUNTA.ID " +
+                        " WHERE DIAGNOSTICO.IDEMPRESA = " + IDEmpresa + " AND " + " PERGUNTA.IDEIXO = " + IDEixo +
+                        " AND DIAGNOSTICO.DATACRIACAO = (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DATACRIACAO < (SELECT MAX(DATACRIACAO) FROM DIAGNOSTICO WHERE DIAGNOSTICO.IDEMPRESA = " + IDEmpresa + ") AND DIAGNOSTICO.IDEMPRESA = " + IDEmpresa+" )" );
+            }
+            while (rs.next())
+            {
+                String pergunta = rs.getString("pergunta");
+                int score = rs.getInt("Score");
+                diagnosticos.add(new Diagnosis(score,"",pergunta));
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"" + e.getMessage(),"Erro",0);
+        }
+        return diagnosticos;
+
+    }
+
     public int UpdateEnterprise(Enterprise empresa, String id) throws SQLException {
         con = DriverManager.getConnection(url);
         stm = con.createStatement();

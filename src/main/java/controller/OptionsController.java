@@ -325,6 +325,7 @@ public class OptionsController {
                 }
                 break;
             case"3":
+                newEixoEspecifico(idOption);
                 break;
             case"4":
                 Enterprise actualEnterprise = Database.getInstance().selectEnterprise(idOption);
@@ -334,6 +335,49 @@ public class OptionsController {
                 break;
         }
     }
+    public void newEixoEspecifico(String IDEmpresa) throws SQLException {
+        Scanner in = new Scanner(System.in);
+        System.out.println(" Digite o Eixo que deseja analisar:");
+        int IDEixo = in.nextInt();
+        do  {
+            System.out.println("1 - Empreendedor");
+            System.out.println("2 - Tecnologia");
+            System.out.println("3 - Mercado");
+            System.out.println("4 - Gestão");
+            System.out.println("5 - Capital");
+            System.out.println("6 - Impacto");
+            System.out.println("0 - Sair");
+
+            if (IDEixo >= 1 && IDEixo <= 6) {
+                gerarAnaliseEixoEspecifico(IDEixo, Integer.parseInt(IDEmpresa));
+
+                System.out.println("1 - Empreendedor");
+                System.out.println("2 - Tecnologia");
+                System.out.println("3 - Mercado");
+                System.out.println("4 - Gestão");
+                System.out.println("5 - Capital");
+                System.out.println("6 - Impacto");
+                System.out.println("0 - Sair");
+                IDEixo = in.nextInt();
+            } else {
+                System.out.println(" Opção inválida! Digite novamente:");
+                IDEixo = in.nextInt();
+            }
+        }while(IDEixo != 0);
+
+    }
+
+    public void gerarAnaliseEixoEspecifico(int IDEixo,int IDEmpresa) throws SQLException
+    {
+        ArrayList<Diagnosis> ArrayDiagnosis = Database.getInstance().QueryEixoEspecifico(IDEixo,IDEmpresa,false);
+        ArrayList<Diagnosis> PenultimoDiagnosis = Database.getInstance().QueryEixoEspecifico(IDEixo,IDEmpresa,true);
+
+        for(int i = 0;i<ArrayDiagnosis.size(); i++)
+        {
+            System.out.println("\n Pergunta " + ArrayDiagnosis.get(i).getPergunta()+ " - Score "+ArrayDiagnosis.get(i).getScore() + " - Score Anterior "+ PenultimoDiagnosis.get(i).getScore());
+        }
+    }
+
 
     public void newDiagnosis() throws SQLException {
        ArrayList<String> enterprises = Database.getInstance().SelectEnterprise();
