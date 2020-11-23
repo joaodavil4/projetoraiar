@@ -230,7 +230,7 @@ public class OptionsController {
         String idOption = in.nextLine();
 
         if (idOption.equals("*")){
-            System.out.println("Análise Comparativa do Eixo");
+            System.out.println("1 - Análise Comparativa do Eixo");
         } else {
             System.out.println("1 - Análise Comparativa do Eixo");
             System.out.println("2 - Análise Histórica do Eixo");
