@@ -242,6 +242,34 @@ public class OptionsController {
 
         switch (analiseOption){
             case "1":
+                ArrayList<Diagnosis> diagnosis = Database.getInstance().SelectDiagnosis(idOption);
+                HashMap<String, Integer> eixoNomeScore = new HashMap<>();
+
+                for (Diagnosis tempDiag : diagnosis) {
+                    if (eixoNomeScore.containsKey(tempDiag.getEixo())){
+                        eixoNomeScore.replace(tempDiag.getEixo(), eixoNomeScore.get(tempDiag.getEixo()) + tempDiag.getScore());
+                    } else {
+                        eixoNomeScore.put(tempDiag.getEixo(), tempDiag.getScore());
+                    }
+                }
+
+                for (String eixos : eixoNomeScore.keySet()){
+                    int eixoCounter = 0;
+                    for (Diagnosis tempEixoName : diagnosis){
+                        if (tempEixoName.getEixo().equals(eixos)) eixoCounter++;
+                    }
+
+                    try {
+                        double totalQuestion = eixoCounter * 5;
+                        double totalScore = eixoNomeScore.get(eixos);
+                        double  perc = (totalScore / totalQuestion) * 100;
+                        System.out.println("Eixo " + eixos + " " + perc + " %");
+                    } catch (Exception e){
+                        System.out.println("Ocorreu um erro para calcular o score " + e);
+                    }
+
+                }
+
                 break;
             case "2":
                 HashMap<String, Integer> eixoScore = new HashMap<String,Integer>();
