@@ -1,9 +1,5 @@
 package model;
 
-import com.sun.org.apache.xpath.internal.objects.XString;
-
-import java.util.Date;
-
 public class Diagnosis {
     private int score;
     private String eixo;
